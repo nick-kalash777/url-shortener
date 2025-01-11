@@ -71,16 +71,17 @@ public class Commands {
 
     public static class UseLimit extends Command {
         protected void useCommand(User currentUser, String[] args) {
-            int linkIndex = 0;
-            int useLimit = 0;
-            for(int i = 0; i < 3; i++) {
-                if (i == 1) linkIndex = Integer.parseInt(args[i]) - 1;
-                else if (i == 2) useLimit = Integer.parseInt(args[i]);
-            }
-
             try {
+                int linkIndex = 0;
+                int useLimit = 0;
+                for(int i = 0; i < 3; i++) {
+                    if (i == 1) linkIndex = Integer.parseInt(args[i]) - 1;
+                    else if (i == 2) useLimit = Integer.parseInt(args[i]);
+                }
                 ShortURL link = currentUser.getLinks().get(linkIndex);
                 link.changeUseLimit(useLimit);
+            } catch (IndexOutOfBoundsException e) {
+                System.out.println("Input the link number.");
             } catch (Exception e) {
                 System.out.println("Something went wrong.");
             }

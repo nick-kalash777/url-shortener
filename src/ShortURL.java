@@ -60,6 +60,7 @@ public class ShortURL {
     }
 
     private void deleteURL(String reason) {
+        URLShortener.shortenedLinks.remove(getShortURL());
         owner.removeLink(this, reason);
     }
 

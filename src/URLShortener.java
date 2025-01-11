@@ -5,10 +5,11 @@ import java.util.*;
 
 public class URLShortener {
     public static User currentUser = null;
-    //HashMap ShortURL : ShortURLObject for quick finding of inputted short links
-    public static HashMap<String, ShortURL> links = new HashMap<>();
-    //HashMap UUIDString : UserObject for quick display of all links belonging to the user
+    //HashMap for quick finding of inputted short links
+    public static HashMap<String, ShortURL> shortenedLinks = new HashMap<>();
+    //HashMap for quick finding of users based on UUID
     public static HashMap<String, User> users = new HashMap<>();
+    // all console commands
     public static Map<String, Commands.Command> commands = Map.of(
             "/l", new Commands.UserLinks(),
             "/q", new Commands.Quit(),
@@ -40,7 +41,7 @@ public class URLShortener {
                 continue;
             } else if (input.startsWith(ShortURL.prefix)) {
                 try {
-                    links.get(input).use();
+                    shortenedLinks.get(input).use();
                     continue;
                 } catch (NullPointerException e) {
                     System.out.println("This short link does not exist.");
@@ -86,7 +87,7 @@ public class URLShortener {
         checkUser();
 
         ShortURL shortURL = makeShortURL(url, useLimit);
-        links.put(shortURL.getShortURL(), shortURL);
+        shortenedLinks.put(shortURL.getShortURL(), shortURL);
         currentUser.addLink(shortURL);
         System.out.println("Your shortened link: " + shortURL.getShortURL());
         System.out.println("It will be active for " + shortURL.formatLifeTime());
@@ -98,7 +99,7 @@ public class URLShortener {
         final int urlLength = 8;
         do {
             shortURL = getRandomString(urlLength);
-        } while (links.containsKey(ShortURL.prefix + shortURL));
+        } while (shortenedLinks.containsKey(ShortURL.prefix + shortURL));
 
         return new ShortURL(realURL, shortURL, useLimit, currentUser);
 
