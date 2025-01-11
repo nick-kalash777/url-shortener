@@ -9,7 +9,7 @@ public class ShortURL {
     public final static String prefix = "srt.url/";
     private final String shortURL;
     private final String realURL;
-    private int useLimit = 10;
+    private int useLimit;
     private final long timeStart = System.currentTimeMillis();
     public final long timeMax = 86400000;
     private final User owner;
@@ -21,7 +21,7 @@ public class ShortURL {
         this.useLimit = useLimit;
         this.owner = owner;
 
-        setupDeletionTimer(System.currentTimeMillis());
+        setupDeletionTimer();
 
     }
 
@@ -43,7 +43,7 @@ public class ShortURL {
     }
 
 
-    private void setupDeletionTimer(long currentTime) {
+    private void setupDeletionTimer() {
         lifeTimer.schedule(new TimerTask() {
             public void run() {
                 deleteURL("lifetime ran out");

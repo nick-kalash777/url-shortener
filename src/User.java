@@ -1,8 +1,8 @@
 import java.util.ArrayList;
 
 public class User {
-    private ArrayList<ShortURL> links = new ArrayList<ShortURL>();
-    private ArrayList<String> notifications = new ArrayList<String>();
+    private final ArrayList<ShortURL> links = new ArrayList<>();
+    private final ArrayList<String> notifications = new ArrayList<>();
     private final String uuid;
 
     public User (String uuid) {

@@ -1,12 +1,4 @@
-//make deletion of urls after time ends
-//make uselimit decrease after use
-//add switch to another UUID user
-//rehandle exception when short link not found
-// rethink how users/links stored?
-
-import java.awt.*;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.*;
@@ -50,9 +42,13 @@ public class URLShortener {
                 try {
                     links.get(input).use();
                     continue;
+                } catch (NullPointerException e) {
+                    System.out.println("This short link does not exist.");
+                    continue;
                 } catch (Exception e) {
                     System.out.println("Something went wrong.");
                     e.printStackTrace();
+                    continue;
                 }
             }
 
