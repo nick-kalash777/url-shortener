@@ -151,7 +151,8 @@ public class URLShortener {
 
     private static void loadConfig() {
         try(BufferedReader br = new BufferedReader(new FileReader("settings.conf"))) {
-            linkMaxLifeTime = Long.parseLong(br.readLine());
+            String line = br.readLine();
+            linkMaxLifeTime = Long.parseLong(line.substring(line.indexOf("=")+1));
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Error loading config file. Default link lifetime (" + linkMaxLifeTime + " ms) is used.");
