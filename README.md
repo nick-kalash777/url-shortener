@@ -5,11 +5,12 @@ This is a Java app with a console GUI that shortens any given link. All shortene
 Shortened links are generated as random 8-character long Strings, containing both letters/digits. Shortened links are checked against duplicates/are unique.
 
 ## Usage:
-Input any valid link and set the usage limit. Then you'll be given a short link that will open up a web page in the default browser whenever you paste it into the console.\
-![image](https://github.com/user-attachments/assets/43ab5995-3579-4235-a1d4-f40e7adf2433)
+Input any valid link, set the usage/time limits. Then you'll be given a short link that will open up a web page in the default browser whenever you paste it into the console.\
+![image](https://github.com/user-attachments/assets/33fa6f0a-f47f-4262-88cc-1bac858943ab)
+
 
 Default use limit for links: **10** times.\
-Lifetime for every new link: **24** hours.
+Default lifetime for every new link: **24** hours (can be changed in settings.conf).
 
 ## Other commands:
 **/l** to browse all of your shortened links.\
