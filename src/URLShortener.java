@@ -20,6 +20,7 @@ public class URLShortener {
     public static Map<String, Commands.Command> commands = Map.of(
             "/l", new Commands.UserLinks(),
             "/q", new Commands.Quit(),
+            "/user", new Commands.ChangeUser(),
             "/limit", new Commands.UseLimit());
 
 
@@ -47,12 +48,11 @@ public class URLShortener {
                 continue;
             } else if (input.startsWith(ShortURL.prefix)) {
                 try {
-                    Desktop.getDesktop().browse(new URI(links.get(input).getRealURL()));
+                    links.get(input).use();
                     continue;
                 } catch (Exception e) {
                     System.out.println("Something went wrong.");
                     e.printStackTrace();
-                    System.exit(0);
                 }
             }
 
@@ -71,9 +71,14 @@ public class URLShortener {
 
     private static void checkUser() {
         if (currentUser == null) {
-            currentUser = new User(UUID.randomUUID().toString());
-            users.put(currentUser.getUUID(), currentUser);
+            createUser();
         }
+    }
+
+    public static void createUser() {
+        currentUser = new User(UUID.randomUUID().toString());
+        users.put(currentUser.getUUID(), currentUser);
+        System.out.println("Your UUID: " + currentUser.getUUID());
     }
 
     private static void createShortURL(String url, int useLimit) {
@@ -88,10 +93,7 @@ public class URLShortener {
         links.put(shortURL.getShortURL(), shortURL);
         currentUser.addLink(shortURL);
         System.out.println("Your shortened link: " + shortURL.getShortURL());
-        System.out.println("It will be active for ");
-        System.out.print((shortURL.timeMax / (1000 * 60 * 60 * 24)) + " days, " +
-                (shortURL.timeMax / (1000 * 60 * 60) % 24) + " hours, " +
-                (shortURL.timeMax / (1000 * 60) % 60) + " minutes\n");
+        System.out.println("It will be active for " + shortURL.formatLifeTime());
 
     }
 
