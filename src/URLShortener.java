@@ -1,9 +1,13 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.*;
 
 public class URLShortener {
+    public static long linkMaxLifeTime = 86400000;
     public static User currentUser = null;
     //HashMap for quick finding of inputted short links
     public static HashMap<String, ShortURL> shortenedLinks = new HashMap<>();
@@ -24,6 +28,8 @@ public class URLShortener {
                 Copy-paste your link to shorten it.\
 
                 Use /q to quit. Use /l to check your links.""");
+
+        loadConfig();
 
         while (true) {
 
@@ -60,7 +66,20 @@ public class URLShortener {
             } catch (NumberFormatException e) {
                 useLimit = 10;
             }
-            createShortURL(input, useLimit);
+            System.out.println("For how long will this link be active (in minutes)? Leave empty for default/max.");
+            long timeMax;
+            try {
+                timeMax = Long.parseLong(scanner.nextLine());
+                //convert to milliseconds
+                timeMax *= 60000;
+                if (timeMax > linkMaxLifeTime) {
+                    timeMax = linkMaxLifeTime;
+                    System.out.println("Using default lifetime (your desired lifetime is too long).");
+                }
+            } catch (NumberFormatException e) {
+                timeMax = linkMaxLifeTime;
+            }
+            createShortURL(input, useLimit, timeMax);
 
 
         }
@@ -78,7 +97,7 @@ public class URLShortener {
         System.out.println("Your UUID: " + currentUser.getUUID());
     }
 
-    private static void createShortURL(String url, int useLimit) {
+    private static void createShortURL(String url, int useLimit, long timeMax) {
         if (!isValidURL(url)) {
             System.out.println("Invalid URL.");
             return;
@@ -86,7 +105,7 @@ public class URLShortener {
 
         checkUser();
 
-        ShortURL shortURL = makeShortURL(url, useLimit);
+        ShortURL shortURL = makeShortURL(url, useLimit, timeMax);
         shortenedLinks.put(shortURL.getShortURL(), shortURL);
         currentUser.addLink(shortURL);
         System.out.println("Your shortened link: " + shortURL.getShortURL());
@@ -94,14 +113,14 @@ public class URLShortener {
 
     }
 
-    private static ShortURL makeShortURL(String realURL, int useLimit) {
+    private static ShortURL makeShortURL(String realURL, int useLimit, long timeMax) {
         String shortURL;
         final int urlLength = 8;
         do {
             shortURL = getRandomString(urlLength);
         } while (shortenedLinks.containsKey(ShortURL.prefix + shortURL));
 
-        return new ShortURL(realURL, shortURL, useLimit, currentUser);
+        return new ShortURL(realURL, shortURL, useLimit, timeMax, currentUser);
 
     }
 
@@ -127,6 +146,15 @@ public class URLShortener {
             return true;
         } catch (MalformedURLException | URISyntaxException e) {
             return false;
+        }
+    }
+
+    private static void loadConfig() {
+        try(BufferedReader br = new BufferedReader(new FileReader("settings.conf"))) {
+            linkMaxLifeTime = Long.parseLong(br.readLine());
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Error loading config file. Default link lifetime (" + linkMaxLifeTime + " ms) is used.");
         }
     }
 

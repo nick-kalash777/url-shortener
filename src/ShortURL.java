@@ -11,14 +11,15 @@ public class ShortURL {
     private final String realURL;
     private int useLimit;
     private final long timeStart = System.currentTimeMillis();
-    public final long timeMax = 86400000;
+    private final long timeMax;
     private final User owner;
     private final Timer lifeTimer = new Timer();
 
-    public ShortURL(String realURL, String shortURL, int useLimit, User owner) {
+    public ShortURL(String realURL, String shortURL, int useLimit, long timeMax, User owner) {
         this.shortURL = prefix + shortURL;
         this.realURL = realURL;
         this.useLimit = useLimit;
+        this.timeMax = timeMax;
         this.owner = owner;
 
         setupDeletionTimer();

@@ -81,7 +81,7 @@ public class Commands {
                 ShortURL link = currentUser.getLinks().get(linkIndex);
                 link.changeUseLimit(useLimit);
             } catch (IndexOutOfBoundsException e) {
-                System.out.println("Input the link number.");
+                System.out.println("Use: /limit LINK_NUMBER USE_LIMIT.");
             } catch (Exception e) {
                 System.out.println("Something went wrong.");
             }
